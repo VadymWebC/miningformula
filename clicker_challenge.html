@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body>
+		<div>
+			<p text-align:"center">Добро пожаловать в Кликер "Сизиф"</p>
+			<p>Задача: накопить 1_000_000 монет. Удачи:)</p>
+			<p></p>
+			<hr></hr>
+			<p id="money" onclick="getGift()">0</p>
+		</div>
+		<button height="300px" width="200px" type="button" onclick="addMoney()">Получить деньги</button>
+		<p></p>
+		<button id="power" height="300px" width="200px" type="button" onclick="addPower()">Улучшить заработок за: 200</button>
+		<p id="lvlPwr">Ваш текущий уровень усиления"</p>
+		<hr></hr>
+		<p><b>Особый магазин</b></p>
+		<p>Здесь вы можете купить особые возможности для ускорения</p>
+		<table border="1px">
+			<thead>
+				<tr>
+					<th>Особенность</th>
+					<th>Описание</th>
+					<th>Цена</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>Чернорабочий (и кожей тоже) Черныш</th>
+					<td id="infoMiner">Добывает золото с некоторой периодичностью (Как в старые добрые)</td>
+					<td><button id="buyMiner" onclick="buyMiner()">Купить</button></td>
+				</tr>
+				<tr>
+					<th>Допинг HANA_PECHENI</th>
+					<td id="infoProtein">Резко увеличивает вашу скорости добычи (лечение не входит в стоимость)</td>
+					<td><button id="buyProtein" onclick="buyProtein()">Купить</button></td>
+				</tr>
+				<tr>
+					<th>Просрочка (и продукты Ашана "Каждый день")</th>
+					<td id="infoMinerPower">Резко увеличивает скорость Черныша (Не волнуйтесь - в туалет не пустят)</td>
+					<td><button id="buyMinerPower" onclick="buyMinerPower()">Купить</button></td>
+				</tr>
+				<tr>
+				<tr>
+					<th>Легендарный болт троечника, лентяя (производство "Пофигизм")</th>
+					<td>Черныш кладет болт воли, вместо ударов киркой, быстрее добывая монеты</td>
+					<td><button id="buyMinerSpeed" onclick="buyMinerSpeed()">Купить</button></td>
+				</tr>
+					<th>Призыв коммунизма</th>
+					<td>Уменьшает инфляцию</td>
+					<td><button id="buyDiscount" onclick="buyDiscount()">Купить</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<hr></hr>
+		<p><b>Основной магазин роскоши</b></p>
+		<p>Надоел долгий путь? Приобретите мощные усиления за скромные цены</p>
+		<table border="1px">
+			<tbody>
+				<tr>
+					<th>Усиление клика +50</th>
+					<td><button onclick="donate()">Купить за 79₽</button></td>
+				</tr>
+				<tr>
+					<th>Усиление клика +120</th>
+					<td><button onclick="donate()">Купить за 139₽</button></td>
+				</tr>
+				<tr>
+					<th>Усиление клика +250</th>
+					<td><button onclick="donate()">Купить за 249₽</button></td>
+				</tr>
+				<tr>
+					<th>Усиление клика +400</th>
+					<td><button onclick="donate()">Купить за 329₽</button></td>
+				</tr>
+				<tr>
+					<th>Запас Допинга на 2 минуты</th>
+					<td><button onclick="donate()">Купить за 99₽</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<hr></hr>
+		<p><b>Подарки</b></p>
+		<p>Здесь вы можете получать каждые несколько секунд случайные подарки</>
+		<p></p>
+		 <button id="getGift" onclick="getGift()"></button>
+		<p id="infoGift">Вы еще не получали подарков</p>
+	</body>
+	<script>
+		var needs = 1_000_000
+		var money = 0
+		var forClick = 1
+		var moneyTablo = document.getElementById("money")
+		var power = document.getElementById("power")
+		var levelPower = document.getElementById("lvlPwr")
+		var price = 5
+		function addMoney(procent=1*(buyProtein.time>0?4:1)) {
+			var result = (needs-money)/100*(forClick*0.0001*procent)
+			money += result
+			moneyTablo.innerText=`Денег: ${money}`
+			return result
+		}
+		function addPower() {
+			if (money>=price && forClick<=addPower.maxLevel) {
+				money -= price
+				price += Math.round(price/100*((forClick<=200? (30-25*forClick/200) : 10)-buyDiscount.power))
+				if (price>900000) price = (900000-(900000/100*buyDiscount.power))
+				forClick += 2+Math.floor(forClick/(forClick>50 ? (forClick>200 ? (forClick>500 ? 39 : 28) : 15) : 7))
+				power.innerText=`Улучшить заработок за: ${price}`
+				levelPower.innerText=`Твой текущий уровень усиления: ${forClick}`
+				if (forClick>addPower.maxLevel) {
+					power.innerText=`Вы прокачали свой заработок на максимум`
+				}
+			}
+			moneyTablo.innerText=`Денег: ${money}`
+		}
+		addPower.maxLevel = 25000
+		addPower.maxWithProtein = 30000
+		levelPower.innerText=`Твой текущий уровень усиления: ${forClick}`
+		power.innerText=`Улучшить заработок за: ${price}`
+		moneyTablo.innerText=`Денег: ${money}`
+		function buyMiner() {
+			if (money>=buyMiner.price && buyMiner.power<buyMiner.maxPower) {
+				money -= buyMiner.price
+				if (buyMiner.power===0) {
+					buyMiner.power= 10
+				} else {
+					if (buyMiner.power<buyMiner.maxPower) {
+						buyMiner.power += 7
+					}
+				}
+				buyMiner.price += Math.round(buyMiner.price/100*(buyMiner.power<=60? (30-20*buyMiner.power/60) : (buyMiner.power<=140?15-buyDiscount.power:18-buyDiscount.power)))
+				if (buyMiner.power<buyMiner.maxPower) {
+					shopMiner.innerText=`Усилить за ${buyMiner.price}`
+					moneyTablo.innerText=`Денег: ${money}`
+					infoMiner.innerText=`Уровень шахтера: ${buyMiner.power}\nВ общем добыто: ${buyMiner.getted.toFixed(2)}`
+				} else shopMiner.innerText="Макс.уровень"
+			}
+		}
+		buyMiner.maxPower = 300
+		buyMiner.price=1200
+		buyMiner.power=0
+		buyMiner.getted=0
+		var shopMiner = document.getElementById("buyMiner")
+		shopMiner.innerText=`Купить за ${buyMiner.price}`
+		var infoMiner = document.getElementById("infoMiner")
+		async function startMiner() {
+			while (true) {
+				let suka = new Promise((resolve)=>{
+					setTimeout(()=>resolve(), Math.ceil( buyMinerPower.time>0?(120-120/100*buyMinerSpeed.power):(2000-2000/100*buyMinerSpeed.power)))
+				})
+				if (buyMiner.power>0) {
+					buyMiner.getted += addMoney((buyMiner.power*(buyMinerPower.time>0?3:1))/100)
+					infoMiner.innerText=`Уровень шахтера: ${buyMiner.power}\nВ общем добыто: ${buyMiner.getted.toFixed(2)}`
+				}
+				await suka
+			}
+		}
+		startMiner()
+		function donate() {
+			alert("Верни маме карточку")
+		}
+		function buyProtein() {
+			if (money>=buyProtein.price) {
+				buyProtein.time += 6
+				if (addPower.maxLevel<addPower.maxWithProtein) {
+					addPower.maxLevel += 50
+					power.innerText=`Улучшить заработок за: ${price}`
+				}
+				money -= buyProtein.price
+				moneyTablo.innerText=`Денег: ${money}`
+			}
+		}
+		buyProtein.price=0
+		buyProtein.time=0
+		buyProtein.button = document.getElementById("buyProtein")
+		buyProtein.tablo = document.getElementById("infoProtein")
+		setInterval(()=>{
+			if (buyProtein.time>0.0) {
+				buyProtein.time -= 0.1
+				buyProtein.price= forClick*(90-buyDiscount.power)
+				if (buyProtein.price>900000) buyProtein.price = (900000-(900000/100*buyDiscount.power))
+				buyProtein.button.innerText=`Продлить за ${buyProtein.price}`
+				buyProtein.tablo.innerText=`Эффект продлится еще ${buyProtein.time.toFixed(2)}`
+			} else {
+				buyProtein.price = forClick*(95-buyDiscount.power)
+				if (buyProtein.price>900000) buyProtein.price = (900000-(900000/100*buyDiscount.power))
+				buyProtein.button.innerText=`Купить за ${buyProtein.price}`
+				buyProtein.tablo.innerText = "Резко увеличивает вашу скорости добычи (лечение не входит в стоимость)"
+			}
+			if (buyMiner.power) {
+				if (buyMinerPower.time>0.0) {
+					buyMinerPower.time -= 0.1
+					buyMinerPower.price= Math.floor((forClick+(buyMiner.power/100*50))*(25-buyDiscount.power))
+					if (buyMinerPower.price>900000) buyMinerPower.price = (900000-(900000/100*buyDiscount.power))
+					buyMinerPower.button.innerText=`Продолжить диету Черныша за ${buyMinerPower.price}`
+					buyMinerPower.tablo.innerText=`Время упорства Черныша: ${buyMinerPower.time.toFixed(2)}`
+				} else {
+					buyMinerPower.price= Math.floor((forClick+(buyMiner.power/100*50))*(30-buyDiscount.power))
+					if (buyMinerPower.price>900000) buyMinerPower.price = (900000-(900000/100*buyDiscount.power))
+					buyMinerPower.button.innerText=`Купить за ${buyMinerPower.price}`
+					buyMinerPower.tablo.innerText=`Резко увеличивает скорость Черныша (Не волнуйтесь - в туалет не пустят)`
+				}
+			} else {
+				buyMinerPower.button.innerText=`Купите Черныша`
+			}
+			if (getGift.cooldown>0) {
+				getGift.cooldown -= 1
+				getGift.button.innerText = `Следующий подарок через: ${Math.ceil(getGift.cooldown/10)}`
+			} else {
+				getGift.button.innerText = "Подарок готов, нажмите, чтобы получить"
+			}
+		},100);
+		function buyMinerPower() {
+			if (money>=buyMinerPower.price && buyMiner.power) {
+				buyMinerPower.time += 10
+				money -= buyMinerPower.price
+				moneyTablo.innerText=`Денег: ${money}`
+			}
+		}
+		buyMinerPower.time = 0
+		buyMinerPower.button = document.getElementById("buyMinerPower")
+		buyMinerPower.tablo = document.getElementById("infoMinerPower")
+		function getGift() {
+			if (getGift.cooldown===0) {
+				switch (Math.floor(Math.random()*10)) {
+					case 4:
+					case 8:
+						for (let i=0; i<40; i++) {
+							addMoney()
+						}
+						getGift.tablo.innerText = "Последний ваш подарок: куча money"
+						break;
+					case 2:
+						buyProtein.time += 4
+						getGift.tablo.innerText = "Последний ваш подарок: порция допинга"
+						break;
+					default: 
+						for (let i=0; i<15; i++) {
+							addMoney()
+						}
+						getGift.tablo.innerText = "Последний ваш подарок: money"
+						break;
+				}
+				getGift.cooldown = 250
+			}
+		}
+		getGift.cooldown = 0
+		getGift.tablo = document.getElementById("infoGift")
+		getGift.button = document.getElementById("getGift")
+		getGift.button.innerText = "Подарок готов, нажмите, чтобы получить"
+		function buyDiscount() {
+			if (money>=buyDiscount.price && buyDiscount.power<2) {
+				money -= buyDiscount.price
+				buyDiscount.power += 1
+				moneyTablo.innerText=`Денег: ${money}`
+				buyDiscount.price=900000
+				buyDiscount.tablo.innerText = `Купить за ${buyDiscount.price}`
+			}
+			if (buyDiscount.power===2) {
+				buyDiscount.tablo.innerText = "Куплено"
+			}
+		}
+		buyDiscount.power=0
+		buyDiscount.price=300000
+		buyDiscount.tablo = document.getElementById("buyDiscount")
+		buyDiscount.tablo.innerText = `Купить за ${buyDiscount.price}`
+		function buyMinerSpeed() {
+			if (money>=buyMinerSpeed.price && buyMinerSpeed.power===0) {
+				money -= buyMinerSpeed.price
+				buyMinerSpeed.tablo.innerText = "Куплено"
+				buyMinerSpeed.power = 15
+				moneyTablo.innerText=`Денег: ${money}`
+			}
+		}
+		buyMinerSpeed.power=0
+		buyMinerSpeed.price=125000
+		buyMinerSpeed.tablo = document.getElementById("buyMinerSpeed")
+		buyMinerSpeed.tablo.innerText = `Купить за ${buyMinerSpeed.price}`
+	</script>
+</html>
